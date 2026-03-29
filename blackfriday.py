@@ -247,6 +247,14 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ═══════════════════════════════════════════════════════════════════
+# COLOR CONSTANTS FOR MATPLOTLIB (proper RGBA tuples)
+# ═══════════════════════════════════════════════════════════════════
+COLOR_EDGE = (1, 1, 1, 0.1)  # white with 0.1 alpha
+COLOR_GRID = (1, 1, 1, 0.1)  # white with 0.1 alpha
+BG_COLOR = '#0f0f23'
+BG_COLOR_DARK = '#1a1a3e'
+
+# ═══════════════════════════════════════════════════════════════════
 # LOAD DATA
 # ═══════════════════════════════════════════════════════════════════
 @st.cache_data
@@ -366,23 +374,23 @@ if data_loaded:
         with col1:
             st.markdown("#### 💵 Purchase Distribution")
             fig, ax = plt.subplots(figsize=(10, 6))
-            fig.patch.set_facecolor('#0f0f23')
-            ax.set_facecolor('#0f0f23')
+            fig.patch.set_facecolor(BG_COLOR)
+            ax.set_facecolor(BG_COLOR)
             sns.histplot(df['Purchase'], bins=40, kde=True, color='#00f5d4', ax=ax, alpha=0.7)
             ax.axvline(df['Purchase'].mean(), color='#ff6b6b', linestyle='--', linewidth=2, label=f'Mean: ${df["Purchase"].mean():.0f}')
-            ax.legend(facecolor='#1a1a3e', edgecolor='rgba(255,255,255,0.1)')
+            ax.legend(facecolor=BG_COLOR_DARK, edgecolor=COLOR_EDGE)
             ax.set_xlabel('Purchase Amount ($)', color='white')
             ax.set_ylabel('Count', color='white')
             ax.tick_params(colors='white')
             for spine in ax.spines.values():
-                spine.set_color('rgba(255,255,255,0.1)')
+                spine.set_color(COLOR_EDGE)
             plt.tight_layout()
             st.pyplot(fig)
             
             st.markdown("#### 🎂 Purchase by Age Group")
             fig, ax = plt.subplots(figsize=(10, 6))
-            fig.patch.set_facecolor('#0f0f23')
-            ax.set_facecolor('#0f0f23')
+            fig.patch.set_facecolor(BG_COLOR)
+            ax.set_facecolor(BG_COLOR)
             age_order = ['0-17', '18-25', '26-35', '36-45', '46-50', '51-55', '55+']
             palette = ['#00f5d4', '#00bbf9', '#9b5de5', '#f15bb5', '#fee440', '#ff6b6b', '#8ac926']
             sns.boxplot(x='Age', y='Purchase', data=df, order=age_order, palette=palette, ax=ax)
@@ -391,7 +399,7 @@ if data_loaded:
             ax.tick_params(colors='white')
             plt.xticks(rotation=45)
             for spine in ax.spines.values():
-                spine.set_color('rgba(255,255,255,0.1)')
+                spine.set_color(COLOR_EDGE)
             plt.tight_layout()
             st.pyplot(fig)
         
@@ -399,8 +407,8 @@ if data_loaded:
             st.markdown("#### 👫 Gender Analysis")
             fig, axes = plt.subplots(1, 2, figsize=(12, 5))
             for ax in axes:
-                ax.set_facecolor('#0f0f23')
-            fig.patch.set_facecolor('#0f0f23')
+                ax.set_facecolor(BG_COLOR)
+            fig.patch.set_facecolor(BG_COLOR)
             
             # Pie chart
             gender_counts = df['Gender'].value_counts()
@@ -417,14 +425,14 @@ if data_loaded:
             axes[1].set_ylabel('Avg Purchase ($)', color='white')
             axes[1].tick_params(colors='white')
             for spine in axes[1].spines.values():
-                spine.set_color('rgba(255,255,255,0.1)')
+                spine.set_color(COLOR_EDGE)
             plt.tight_layout()
             st.pyplot(fig)
             
             st.markdown("#### 🏙️ City Category Performance")
             fig, ax = plt.subplots(figsize=(10, 6))
-            fig.patch.set_facecolor('#0f0f23')
-            ax.set_facecolor('#0f0f23')
+            fig.patch.set_facecolor(BG_COLOR)
+            ax.set_facecolor(BG_COLOR)
             city_stats = df.groupby('City_Category')['Purchase'].agg(['mean', 'count'])
             city_stats.columns = ['Avg Purchase', 'Transactions']
             city_stats = city_stats.reset_index()
@@ -442,10 +450,10 @@ if data_loaded:
             ax.set_xticklabels(city_stats['City_Category'])
             ax.tick_params(colors='white')
             ax2.tick_params(colors='#9b5de5')
-            ax.legend(loc='upper left', facecolor='#1a1a3e', edgecolor='rgba(255,255,255,0.1)')
-            ax2.legend(loc='upper right', facecolor='#1a1a3e', edgecolor='rgba(255,255,255,0.1)')
+            ax.legend(loc='upper left', facecolor=BG_COLOR_DARK, edgecolor=COLOR_EDGE)
+            ax2.legend(loc='upper right', facecolor=BG_COLOR_DARK, edgecolor=COLOR_EDGE)
             for spine in ax.spines.values():
-                spine.set_color('rgba(255,255,255,0.1)')
+                spine.set_color(COLOR_EDGE)
             plt.tight_layout()
             st.pyplot(fig)
         
@@ -454,8 +462,8 @@ if data_loaded:
         numeric_cols = ['Gender_Encoded', 'Age_Encoded', 'Occupation', 'City_Encoded', 
                         'Stay_Encoded', 'Marital_Status', 'Purchase']
         fig, ax = plt.subplots(figsize=(12, 8))
-        fig.patch.set_facecolor('#0f0f23')
-        ax.set_facecolor('#0f0f23')
+        fig.patch.set_facecolor(BG_COLOR)
+        ax.set_facecolor(BG_COLOR)
         sns.heatmap(df[numeric_cols].corr(), annot=True, cmap='coolwarm', center=0, 
                     fmt='.2f', linewidths=0.5, ax=ax,
                     cbar_kws={'label': 'Correlation'})
@@ -486,18 +494,18 @@ if data_loaded:
                 inertias.append(kmeans.inertia_)
             
             fig, ax = plt.subplots(figsize=(10, 6))
-            fig.patch.set_facecolor('#0f0f23')
-            ax.set_facecolor('#0f0f23')
+            fig.patch.set_facecolor(BG_COLOR)
+            ax.set_facecolor(BG_COLOR)
             ax.plot(K_range, inertias, 'o-', linewidth=2, markersize=10, color='#00f5d4')
             ax.axvline(n_clusters, color='#ff6b6b', linestyle='--', linewidth=2, label=f'Selected K={n_clusters}')
             ax.set_xlabel('Number of Clusters (K)', color='white')
             ax.set_ylabel('Inertia', color='white')
             ax.set_title('Elbow Method for Optimal K', color='white')
-            ax.legend(facecolor='#1a1a3e', edgecolor='rgba(255,255,255,0.1)')
-            ax.grid(True, alpha=0.2, color='rgba(255,255,255,0.1)')
+            ax.legend(facecolor=BG_COLOR_DARK, edgecolor=COLOR_EDGE)
+            ax.grid(True, alpha=0.2, color=COLOR_GRID)
             ax.tick_params(colors='white')
             for spine in ax.spines.values():
-                spine.set_color('rgba(255,255,255,0.1)')
+                spine.set_color(COLOR_EDGE)
             plt.tight_layout()
             st.pyplot(fig)
         
@@ -508,17 +516,17 @@ if data_loaded:
         with col2:
             st.markdown("##### 🎨 Cluster Visualization")
             fig, ax = plt.subplots(figsize=(10, 6))
-            fig.patch.set_facecolor('#0f0f23')
-            ax.set_facecolor('#0f0f23')
+            fig.patch.set_facecolor(BG_COLOR)
+            ax.set_facecolor(BG_COLOR)
             scatter = sns.scatterplot(x=features.iloc[:, 0], y=features.iloc[:, 3], 
                                        hue=df['Cluster'], palette='Set2', s=60, alpha=0.7, ax=ax)
             ax.set_xlabel('Age (Encoded)', color='white')
             ax.set_ylabel('Purchase Amount ($)', color='white')
             ax.set_title(f'Customer Clusters (K={n_clusters})', color='white')
             ax.tick_params(colors='white')
-            ax.legend(facecolor='#1a1a3e', edgecolor='rgba(255,255,255,0.1)')
+            ax.legend(facecolor=BG_COLOR_DARK, edgecolor=COLOR_EDGE)
             for spine in ax.spines.values():
-                spine.set_color('rgba(255,255,255,0.1)')
+                spine.set_color(COLOR_EDGE)
             plt.tight_layout()
             st.pyplot(fig)
         
@@ -559,8 +567,8 @@ if data_loaded:
         with col1:
             st.markdown("#### 📦 Product Category Popularity")
             fig, ax = plt.subplots(figsize=(10, 6))
-            fig.patch.set_facecolor('#0f0f23')
-            ax.set_facecolor('#0f0f23')
+            fig.patch.set_facecolor(BG_COLOR)
+            ax.set_facecolor(BG_COLOR)
             cat_counts = df['Product_Category_1'].value_counts().head(10)
             colors = plt.cm.viridis(np.linspace(0.3, 0.9, len(cat_counts)))
             bars = ax.barh(range(len(cat_counts)), cat_counts.values, color=colors)
@@ -570,7 +578,7 @@ if data_loaded:
             ax.set_title('Top 10 Product Categories', color='white')
             ax.tick_params(colors='white')
             for spine in ax.spines.values():
-                spine.set_color('rgba(255,255,255,0.1)')
+                spine.set_color(COLOR_EDGE)
             for i, v in enumerate(cat_counts.values):
                 ax.text(v + 1000, i, f'{v:,}', va='center', fontsize=9, color='white')
             plt.tight_layout()
@@ -578,8 +586,8 @@ if data_loaded:
             
             st.markdown("#### 💵 Revenue by Category")
             fig, ax = plt.subplots(figsize=(10, 6))
-            fig.patch.set_facecolor('#0f0f23')
-            ax.set_facecolor('#0f0f23')
+            fig.patch.set_facecolor(BG_COLOR)
+            ax.set_facecolor(BG_COLOR)
             cat_revenue = df.groupby('Product_Category_1')['Purchase'].sum().sort_values(ascending=False).head(10)
             colors = plt.cm.plasma(np.linspace(0.3, 0.9, len(cat_revenue)))
             ax.barh(range(len(cat_revenue)), cat_revenue.values, color=colors)
@@ -589,7 +597,7 @@ if data_loaded:
             ax.set_title('Top 10 Categories by Revenue', color='white')
             ax.tick_params(colors='white')
             for spine in ax.spines.values():
-                spine.set_color('rgba(255,255,255,0.1)')
+                spine.set_color(COLOR_EDGE)
             plt.tight_layout()
             st.pyplot(fig)
         
@@ -629,8 +637,8 @@ if data_loaded:
         # Category performance by demographic
         st.markdown("#### 👫 Category Preferences by Gender")
         fig, ax = plt.subplots(figsize=(12, 6))
-        fig.patch.set_facecolor('#0f0f23')
-        ax.set_facecolor('#0f0f23')
+        fig.patch.set_facecolor(BG_COLOR)
+        ax.set_facecolor(BG_COLOR)
         gender_cat = df.groupby(['Gender', 'Product_Category_1'])['Purchase'].mean().unstack().T
         gender_cat = gender_cat.head(10)
         x = np.arange(len(gender_cat))
@@ -643,9 +651,9 @@ if data_loaded:
         ax.set_xticks(x)
         ax.set_xticklabels(gender_cat.index)
         ax.tick_params(colors='white')
-        ax.legend(facecolor='#1a1a3e', edgecolor='rgba(255,255,255,0.1)')
+        ax.legend(facecolor=BG_COLOR_DARK, edgecolor=COLOR_EDGE)
         for spine in ax.spines.values():
-            spine.set_color('rgba(255,255,255,0.1)')
+            spine.set_color(COLOR_EDGE)
         plt.tight_layout()
         st.pyplot(fig)
     
@@ -678,8 +686,8 @@ if data_loaded:
         with col1:
             st.markdown("##### 🔍 Anomaly Detection Visualization")
             fig, ax = plt.subplots(figsize=(12, 6))
-            fig.patch.set_facecolor('#0f0f23')
-            ax.set_facecolor('#0f0f23')
+            fig.patch.set_facecolor(BG_COLOR)
+            ax.set_facecolor(BG_COLOR)
             ax.scatter(normal.index[:5000], normal['Purchase'].iloc[:5000], 
                       c='#00f5d4', alpha=0.3, s=10, label='Normal')
             ax.scatter(anomalies.index, anomalies['Purchase'], 
@@ -689,26 +697,26 @@ if data_loaded:
             ax.set_xlabel('Transaction Index', color='white')
             ax.set_ylabel('Purchase Amount ($)', color='white')
             ax.set_title('Anomaly Detection Results', color='white')
-            ax.legend(facecolor='#1a1a3e', edgecolor='rgba(255,255,255,0.1)')
+            ax.legend(facecolor=BG_COLOR_DARK, edgecolor=COLOR_EDGE)
             ax.tick_params(colors='white')
             for spine in ax.spines.values():
-                spine.set_color('rgba(255,255,255,0.1)')
+                spine.set_color(COLOR_EDGE)
             plt.tight_layout()
             st.pyplot(fig)
         
         with col2:
             st.markdown("##### 📊 Anomaly Distribution")
             fig, ax = plt.subplots(figsize=(12, 6))
-            fig.patch.set_facecolor('#0f0f23')
-            ax.set_facecolor('#0f0f23')
+            fig.patch.set_facecolor(BG_COLOR)
+            ax.set_facecolor(BG_COLOR)
             sns.histplot(df['Purchase'], bins=50, color='#00f5d4', alpha=0.5, label='All', ax=ax)
             sns.histplot(anomalies['Purchase'], bins=20, color='#ff6b6b', label='Anomalies', ax=ax)
             ax.set_xlabel('Purchase Amount ($)', color='white')
             ax.set_title('Purchase Distribution with Anomalies Highlighted', color='white')
-            ax.legend(facecolor='#1a1a3e', edgecolor='rgba(255,255,255,0.1)')
+            ax.legend(facecolor=BG_COLOR_DARK, edgecolor=COLOR_EDGE)
             ax.tick_params(colors='white')
             for spine in ax.spines.values():
-                spine.set_color('rgba(255,255,255,0.1)')
+                spine.set_color(COLOR_EDGE)
             plt.tight_layout()
             st.pyplot(fig)
         
@@ -724,8 +732,8 @@ if data_loaded:
         with col1:
             st.markdown("##### 👫 Anomalies by Gender")
             fig, ax = plt.subplots(figsize=(8, 6))
-            fig.patch.set_facecolor('#0f0f23')
-            ax.set_facecolor('#0f0f23')
+            fig.patch.set_facecolor(BG_COLOR)
+            ax.set_facecolor(BG_COLOR)
             anom_gender = anomalies['Gender'].value_counts()
             ax.pie(anom_gender, labels=['Male', 'Female'], autopct='%1.1f%%', 
                   colors=['#00f5d4', '#f15bb5'], explode=(0.05, 0.05),
@@ -736,15 +744,15 @@ if data_loaded:
         with col2:
             st.markdown("##### 🎂 Anomalies by Age")
             fig, ax = plt.subplots(figsize=(10, 6))
-            fig.patch.set_facecolor('#0f0f23')
-            ax.set_facecolor('#0f0f23')
+            fig.patch.set_facecolor(BG_COLOR)
+            ax.set_facecolor(BG_COLOR)
             sns.countplot(x='Age', data=anomalies, palette='viridis', 
                          order=['0-17', '18-25', '26-35', '36-45', '46-50', '51-55', '55+'], ax=ax)
             ax.set_title('Anomaly Distribution by Age Group', color='white')
             ax.tick_params(colors='white')
             plt.xticks(rotation=45)
             for spine in ax.spines.values():
-                spine.set_color('rgba(255,255,255,0.1)')
+                spine.set_color(COLOR_EDGE)
             plt.tight_layout()
             st.pyplot(fig)
     
